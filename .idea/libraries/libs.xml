@@ -1,7 +1,6 @@
 <component name="libraryTable">
-  <library name="checkstyle-8.36.2-all">
+  <library name="libs">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/checker/checkstyle-8.36.2-all.jar!/" />
       <root url="file://$PROJECT_DIR$/libs" />
     </CLASSES>
     <JAVADOC />
