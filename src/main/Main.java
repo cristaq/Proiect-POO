@@ -6,6 +6,7 @@ import Database.ChildrenDatabase;
 import Database.Database;
 import Database.GiftDatabase;
 import Gifts.Gift;
+import checker.Checker;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.parser.ParseException;
@@ -48,10 +49,26 @@ public final class Main {
         GiftDatabase gdb = new GiftDatabase();
         gdb.initGifts(root.get("initialData").get("santaGiftsList"));
 
-        Database db = new Database(cdb, gdb);
+        double initialBudget = root.get("santaBudget").asDouble();
+        Database db = new Database(initialBudget, cdb, gdb);
+        //print for year 0
+        System.out.println(filePath1);
+        for(Child child : cdb.getChildren().values()) {
+            System.out.println(child.getId() + " " + child.getLastName() + " " + child.what() + " " + child.getAssignedBudget());
+        }
+        System.out.println();
 
         for(JsonNode change : root.get("annualChanges")) {
             AnnualChange annualChange = new AnnualChange(change);
+
+            //process changes
+            db.update(annualChange);
+            for(Child child : cdb.getChildren().values()) {
+                System.out.println(child.getId() + " " + child.getLastName() + " " + child.what() + " " + child.getAssignedBudget());
+            }
+            System.out.println();
+
+            //print for year i
         }
     }
 }

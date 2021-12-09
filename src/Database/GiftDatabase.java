@@ -1,6 +1,5 @@
 package Database;
 
-import Children.Child;
 import Gifts.Gift;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -18,4 +17,7 @@ public class GiftDatabase {
         return gifts;
     }
 
+    public void update(AnnualChange annualChange) {
+        gifts.addAll(annualChange.getNewGifts());
+    }
 }
