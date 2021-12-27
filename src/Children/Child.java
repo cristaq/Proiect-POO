@@ -1,5 +1,7 @@
 package Children;
 
+import Database.GiftDatabase;
+import Gifts.Gift;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
@@ -10,10 +12,11 @@ public abstract class Child {
     protected String firstName;
     protected String city;
     protected int age;
-    protected ArrayList<String> giftPreference = new ArrayList<>();
+    protected ArrayList<String> giftsPreferences = new ArrayList<>();
     protected double averageScore;
     protected ArrayList<Double> niceScoreHistory = new ArrayList<>();
     protected double assignedBudget;
+    protected ArrayList<Gift> receivedGifts = new ArrayList<>();
 
     public Child(){}
 
@@ -25,7 +28,7 @@ public abstract class Child {
         city = node.get("city").asText();
         niceScoreHistory.add(node.get("niceScore").asDouble());
         for(JsonNode gift : node.get("giftsPreferences")) {
-            giftPreference.add(gift.asText());
+            giftsPreferences.add(gift.asText());
         }
         averageScore = calculateNiceScore();
     }
@@ -58,24 +61,58 @@ public abstract class Child {
         return firstName;
     }
 
-    public ArrayList<String> getGiftPreference() {
-        return giftPreference;
+    public ArrayList<Gift> getReceivedGifts() {
+        return receivedGifts;
+    }
+
+    public ArrayList<String> getGiftsPreferences() {
+        return giftsPreferences;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public ArrayList<Double> getNiceScoreHistory() {
+        return niceScoreHistory;
     }
 
     public void update(UpdateChild updateChild) {
         if(updateChild.niceScore != -1) {
             niceScoreHistory.add(updateChild.niceScore);
         }
-        for(String gift : updateChild.getGiftPreference()) {
-            giftPreference.remove(gift);
-            giftPreference.add(0, gift);
+        for(int i = updateChild.getGiftPreference().size() - 1; i >=0; i--) {
+            giftsPreferences.remove(updateChild.getGiftPreference().get(i));
+            giftsPreferences.add(0, updateChild.getGiftPreference().get(i));
         }
         averageScore = calculateNiceScore();
 
     }
 
+    public void receiveGifts(GiftDatabase giftDatabase) {
+        double copy = assignedBudget;
+        receivedGifts.clear();
+        for(String category : giftsPreferences) {
+            Gift pending = null;
+            double lowestPrice = Double.MAX_VALUE;
+            for(Gift gift : giftDatabase.getGifts()) {
+                if(category.equals(gift.getCategory())
+                        && lowestPrice > gift.getPrice()
+                        && assignedBudget > gift.getPrice()) {
+                    lowestPrice = gift.getPrice();
+                    pending = gift;
+                }
+            }
+            if(pending != null) {
+                receivedGifts.add(pending);
+                assignedBudget -= pending.getPrice();
+            }
+        }
+        assignedBudget = copy;
+    }
+
     public abstract String what();
-    public abstract Double calculateNiceScore();
+    public abstract double calculateNiceScore();
 
     public int getAge() {
         return age;
@@ -90,7 +127,7 @@ public abstract class Child {
                 ", age=" + age +
                 ", city=" + city +
                 ", niceScore=" + niceScoreHistory +
-                ", giftPreference=" + giftPreference +
+                ", giftPreference=" + giftsPreferences +
                 '}';
     }
 }

@@ -13,6 +13,18 @@ public class Gift {
         category = node.get("category").asText();
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
     @Override
     public String toString() {
         return "Gift{" +

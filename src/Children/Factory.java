@@ -6,7 +6,7 @@ public class Factory {
     public static Child createChild(JsonNode node, int age) {
         if(age < 5) {
             return new Baby(node);
-        } else if (age < 13) {
+        } else if (age < 12) {
             return new Kid(node);
         } else if (age < 19) {
             return new Teen(node);
@@ -20,7 +20,7 @@ public class Factory {
         int age = child.getAge();
         if(age == 5) {
             return new Kid(child);
-        } else if (age == 13) {
+        } else if (age == 12) {
             return new Teen(child);
         } else {
             return child;

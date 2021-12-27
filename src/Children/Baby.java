@@ -13,7 +13,7 @@ public class Baby extends Child{
     }
 
     @Override
-    public Double calculateNiceScore() {
+    public double calculateNiceScore() {
         return 10.0;
     }
 }

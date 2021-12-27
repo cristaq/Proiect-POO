@@ -13,7 +13,7 @@ public class Teen extends Child{
     }
 
     @Override
-    public Double calculateNiceScore() {
+    public double calculateNiceScore() {
         double num1 = 0;
         for(int i = 0; i < niceScoreHistory.size(); i++) {
             num1 += niceScoreHistory.get(i) * (i + 1);
@@ -29,6 +29,7 @@ public class Teen extends Child{
         age = kid.age;
         city = kid.city;
         niceScoreHistory.addAll(kid.niceScoreHistory);
-        giftPreference.addAll(kid.giftPreference);
+        giftsPreferences.addAll(kid.giftsPreferences);
+        averageScore = calculateNiceScore();
     }
 }

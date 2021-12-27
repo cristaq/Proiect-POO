@@ -3,16 +3,17 @@ package Database;
 import Children.Child;
 import Children.Factory;
 import Children.UpdateChild;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Collection;
 import java.util.TreeMap;
-
 public class ChildrenDatabase {
     private TreeMap<Integer, Child> children = new TreeMap<>();
 
     public void initChildren(JsonNode arrayNode) {
-        for(JsonNode node : arrayNode) {
+        for (JsonNode node : arrayNode) {
             Child child = Factory.createChild(node, node.get("age").asInt());
-            if(child != null) {
+            if (child != null) {
                 children.put(child.getId(), child);
             }
         }
@@ -22,23 +23,27 @@ public class ChildrenDatabase {
         children.entrySet().removeIf(entry -> (entry.getValue().getAge() == 18));
         for (int key : children.keySet()) {
             Child update = Factory.growUp(children.get(key));
-            if(update != children.get(key)) {
+            if (update != children.get(key)) {
                 children.put(key, update);
             }
         }
-
-        for(Child child : annualChange.getNewChildren()) {
+        for (Child child : annualChange.getNewChildren()) {
             children.put(child.getId(), child);
         }
 
-        for(UpdateChild updateChild : annualChange.getUpdateChildren()) {
+        for (UpdateChild updateChild : annualChange.getUpdateChildren()) {
             Child forUpdate = children.get(updateChild.getId());
-            if(forUpdate != null) {
+            if (forUpdate != null) {
                 forUpdate.update(updateChild);
             }
         }
     }
+    @JsonIgnore
     public TreeMap<Integer, Child> getChildren() {
         return children;
+    }
+    @JsonProperty("children")
+    public Collection<Child> getJ() {
+        return children.values();
     }
 }

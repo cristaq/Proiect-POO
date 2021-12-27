@@ -17,16 +17,22 @@ public class AnnualChange {
     public AnnualChange(JsonNode node) {
         newSantaBudget = node.get("newSantaBudget").asDouble();
         for(JsonNode gift : node.get("newGifts")) {
-            newGifts.add(new Gift(gift));
+            if(gift != null) {
+                newGifts.add(new Gift(gift));
+            }
         }
         for(JsonNode child : node.get("newChildren")) {
-            Child newChild = Factory.createChild(child, child.get("age").asInt());
-            if(newChild != null) {
-                newChildren.add(newChild);
+            if(child != null) {
+                Child newChild = Factory.createChild(child, child.get("age").asInt());
+                if (newChild != null) {
+                    newChildren.add(newChild);
+                }
             }
         }
         for(JsonNode updateChild : node.get("childrenUpdates")) {
-            updateChildren.add(new UpdateChild(updateChild));
+            if(updateChild != null) {
+                updateChildren.add(new UpdateChild(updateChild));
+            }
         }
     }
 

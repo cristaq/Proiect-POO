@@ -14,9 +14,9 @@ public class Kid extends Child{
     }
 
     @Override
-    public Double calculateNiceScore() {
-        Double finalScore = 0.0;
-        for(Double score : niceScoreHistory) {
+    public double calculateNiceScore() {
+        double finalScore = 0.0;
+        for(double score : niceScoreHistory) {
             finalScore += score;
         }
         return finalScore / niceScoreHistory.size();
@@ -29,6 +29,7 @@ public class Kid extends Child{
         age = baby.age;
         city = baby.city;
         niceScoreHistory.addAll(baby.niceScoreHistory);
-        giftPreference.addAll(baby.giftPreference);
+        giftsPreferences.addAll(baby.giftsPreferences);
+        averageScore = calculateNiceScore();
     }
 }

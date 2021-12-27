@@ -17,6 +17,7 @@ public class Database {
         this.giftDatabase = giftDatabase;
         calculateUnitBudget();
         allocBudget();
+        giveGifts();
     }
 
     public void update(AnnualChange annualChange) {
@@ -25,6 +26,7 @@ public class Database {
         giftDatabase.update(annualChange);
         calculateUnitBudget();
         allocBudget();
+        giveGifts();
     }
 
     public void calculateUnitBudget() {
@@ -39,5 +41,19 @@ public class Database {
         for (Child child : childrenDatabase.getChildren().values()) {
             child.setAssignedBudget(child.getAverageScore() * unitBudget);
         }
+    }
+
+    public void giveGifts() {
+        for (Child child : childrenDatabase.getChildren().values()) {
+            child.receiveGifts(giftDatabase);
+        }
+    }
+
+    public double getSantaBudget() {
+        return santaBudget;
+    }
+
+    public double getUnitBudget() {
+        return unitBudget;
     }
 }
