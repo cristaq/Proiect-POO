@@ -1,15 +1,10 @@
-package Children;
+package children;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class Baby extends Child{
-    public Baby(JsonNode node) {
+public final class Baby extends Child {
+    public Baby(final JsonNode node) {
         super(node);
-    }
-
-    @Override
-    public String what() {
-        return "baby";
     }
 
     @Override

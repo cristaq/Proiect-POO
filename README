@@ -1,0 +1,29 @@
+Cristache Cristian-Valentin
+
+The purpose of the project is to distribute Santa Claus' gifts to
+a database of children depending on their "nice score", preferences and
+Santa's budget. The input and output are passed as JSON files.
+
+children package
+Here are all classes related to children. The Child class is abstract,
+with implementations in Baby, Kid and Teen. They are basically just strategies
+that calculate the nice score according to age category.
+Factory creates children depending on age. It is also responsible for growing up,
+transforming a Baby into a Kid after the age of 5, and a Kid into a Teen after
+the age of 12. The strategies inherit an abstract class, leaving room for adding
+new specific fields depending on the child.
+The UpdateChild class contains all fields that can be found in an annual update.
+
+database package
+The AnnualChange class contains all updates from a year: updates to children, to gifts,
+new budget etc.
+ChildrenDatabase stores all children in a treemap, sorted by ID.
+GiftDatabase stores all gifts.
+Database contains the two aforementioned databases, as well as budgets.
+
+*****************************************************************************************
+Main
+First we process the initial data adding all children and gifts to the Database.
+Every year, we store the changes in AnnualChange and then we update the Database based on
+those changes.
+Every year we add the changes to a JsonArray that is going to represent the output.

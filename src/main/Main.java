@@ -1,16 +1,15 @@
 package main;
 
-import Database.AnnualChange;
-import Database.ChildrenDatabase;
-import Database.Database;
-import Database.GiftDatabase;
+import database.AnnualChange;
+import database.ChildrenDatabase;
+import database.Database;
+import database.GiftDatabase;
 import checker.Checker;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import common.Constants;
-import org.json.simple.parser.ParseException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,28 +30,27 @@ public final class Main {
      * @param args
      *          the arguments used to call the main method
      */
-    public static void main(final String[] args) throws IOException, ParseException {
+    public static void main(final String[] args) throws IOException {
         File directory = new File("tests");
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        /*File file = new File("tests/test22.json");
-        JsonNode jsonNode = objectMapper.readTree
-                (new File(file.getAbsolutePath()).getAbsoluteFile());
-        list(jsonNode, file.getAbsolutePath());
-
-         */
-
-        for(File file : Objects.requireNonNull(directory.listFiles())) {
-            list(file);
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
+            StringBuilder numberOfTask = new StringBuilder();
+            for (int i = 0; i < file.getName().length(); i++) {
+                if (Character.isDigit(file.getName().charAt(i))) {
+                    numberOfTask.append(file.getName().charAt(i));
+                }
+            }
+            String outputFile = Constants.OUTPUT_PATH + numberOfTask.toString()
+                    + Constants.FILE_EXTENSION;
+            list(file, outputFile);
         }
 
         Checker.calculateScore();
     }
 
-    public static void list(File file) throws IOException {
+    public static void list(final File file,
+                            final String outputFile) throws IOException {
         ObjectMapper map = new ObjectMapper();
-        JsonNode root = map.readTree
-                (new File(file.getAbsolutePath()).getAbsoluteFile());
+        JsonNode root = map.readTree(new File(file.getAbsolutePath()).getAbsoluteFile());
         int numberOfYears = root.get("numberOfYears").asInt();
 
         ChildrenDatabase cdb = new ChildrenDatabase();
@@ -64,45 +62,24 @@ public final class Main {
         double initialBudget = root.get("santaBudget").asDouble();
         Database db = new Database(initialBudget, cdb, gdb);
 
-        /*System.out.println(filePath1);
-        for(Child child : cdb.getChildren().values()) {
-            System.out.println(child.getId() + " " + child.getLastName() + " " + child.getAssignedBudget() + " " + child.getReceivedGifts());
-        }
-        System.out.println();
-
-         */
-
         ObjectNode newNode = map.createObjectNode();
         newNode.putArray("annualChildren");
         ((ArrayNode) newNode.get("annualChildren")).add(map.valueToTree(cdb));
-        for(JsonNode change : root.get("annualChanges")) {
+
+        for (JsonNode change : root.get("annualChanges")) {
             AnnualChange annualChange = new AnnualChange(change);
 
             db.update(annualChange);
 
             ((ArrayNode) newNode.get("annualChildren")).add(map.valueToTree(cdb));
 
-            /*for(Child child : cdb.getChildren().values()) {
-                System.out.println(child.getId() + " " + child.getLastName() + " " + child.getAge() + " " + child.getNiceScoreHistory() + " " + child.getAssignedBudget() + " " + child.getReceivedGifts());
-            }
-            System.out.println();
-
-             */
             numberOfYears--;
-            if(numberOfYears == 0) {
+            if (numberOfYears == 0) {
                 break;
             }
         }
-        String numberOfTask = "";
-        int i = file.getAbsolutePath().indexOf("test");
-        for(; i < file.getAbsolutePath().length(); i++) {
-            char c = file.getAbsolutePath().charAt(i);
-            if(Character.isDigit(c)) {
-                numberOfTask += c;
-            }
-        }
-        String out = Constants.OUTPUT_PATH + numberOfTask + Constants.FILE_EXTENSION;
-        BufferedWriter writer = new BufferedWriter(new FileWriter(out));
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
         writer.write(newNode.toPrettyString());
         writer.close();
     }

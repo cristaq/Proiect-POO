@@ -1,16 +1,25 @@
-package Database;
+package database;
 
-import Children.Child;
-import Children.Factory;
-import Children.UpdateChild;
-import com.fasterxml.jackson.annotation.*;
+import children.Child;
+import children.Factory;
+import children.UpdateChild;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collection;
 import java.util.TreeMap;
-public class ChildrenDatabase {
+
+/**
+ * This class contains all children in a TreeMap, ordered by ID.
+ */
+public final class ChildrenDatabase {
     private TreeMap<Integer, Child> children = new TreeMap<>();
 
-    public void initChildren(JsonNode arrayNode) {
+    /**
+     * Creates all children in the initial data.
+     * @param arrayNode a JsonArray with children data
+     */
+    public void initChildren(final JsonNode arrayNode) {
         for (JsonNode node : arrayNode) {
             Child child = Factory.createChild(node, node.get("age").asInt());
             if (child != null) {
@@ -19,7 +28,13 @@ public class ChildrenDatabase {
         }
     }
 
-    public void update(AnnualChange annualChange) {
+    /**
+     * Updates the children entries. The method will remove all children above 18,
+     * will apply growUp method from factory and will add the new children, while
+     * updating the old entries.
+     * @param annualChange
+     */
+    public void update(final AnnualChange annualChange) {
         children.entrySet().removeIf(entry -> (entry.getValue().getAge() == 18));
         for (int key : children.keySet()) {
             Child update = Factory.growUp(children.get(key));

@@ -1,13 +1,13 @@
-package Gifts;
+package gifts;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class Gift {
-    String productName;
-    Double price;
-    String category;
+public final class Gift {
+    private String productName;
+    private Double price;
+    private String category;
 
-    public Gift(JsonNode node) {
+    public Gift(final JsonNode node) {
         productName = node.get("productName").asText();
         price = node.get("price").asDouble();
         category = node.get("category").asText();
@@ -23,14 +23,5 @@ public class Gift {
 
     public String getCategory() {
         return category;
-    }
-
-    @Override
-    public String toString() {
-        return "Gift{" +
-                "productName='" + productName + '\'' +
-                ", price=" + price +
-                ", category='" + category + '\'' +
-                '}';
     }
 }

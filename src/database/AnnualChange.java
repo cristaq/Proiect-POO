@@ -1,36 +1,40 @@
-package Database;
+package database;
 
-import Children.Child;
-import Children.Factory;
-import Children.UpdateChild;
-import Gifts.Gift;
+import children.Child;
+import children.Factory;
+import children.UpdateChild;
+import gifts.Gift;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 
-public class AnnualChange {
+/**
+ * This class has all the information necessary to update
+ * the database.
+ */
+public final class AnnualChange {
     private Double newSantaBudget;
     private ArrayList<Gift> newGifts = new ArrayList<>();
     private ArrayList<Child> newChildren = new ArrayList<>();
     private ArrayList<UpdateChild> updateChildren = new ArrayList<>();
 
-    public AnnualChange(JsonNode node) {
+    public AnnualChange(final JsonNode node) {
         newSantaBudget = node.get("newSantaBudget").asDouble();
-        for(JsonNode gift : node.get("newGifts")) {
-            if(gift != null) {
+        for (JsonNode gift : node.get("newGifts")) {
+            if (gift != null) {
                 newGifts.add(new Gift(gift));
             }
         }
-        for(JsonNode child : node.get("newChildren")) {
-            if(child != null) {
+        for (JsonNode child : node.get("newChildren")) {
+            if (child != null) {
                 Child newChild = Factory.createChild(child, child.get("age").asInt());
                 if (newChild != null) {
                     newChildren.add(newChild);
                 }
             }
         }
-        for(JsonNode updateChild : node.get("childrenUpdates")) {
-            if(updateChild != null) {
+        for (JsonNode updateChild : node.get("childrenUpdates")) {
+            if (updateChild != null) {
                 updateChildren.add(new UpdateChild(updateChild));
             }
         }

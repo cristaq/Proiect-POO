@@ -1,28 +1,27 @@
-package Children;
+package children;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class Kid extends Child{
+public final class Kid extends Child {
 
-    public Kid(JsonNode node) {
+    public Kid(final JsonNode node) {
         super(node);
-    }
-
-    @Override
-    public String what() {
-        return "kid";
     }
 
     @Override
     public double calculateNiceScore() {
         double finalScore = 0.0;
-        for(double score : niceScoreHistory) {
+        for (double score : niceScoreHistory) {
             finalScore += score;
         }
         return finalScore / niceScoreHistory.size();
     }
 
-    public Kid(Child baby) {
+    /**
+     * Constructor used when a baby grows up to be a kid.
+     * @param baby
+     */
+    public Kid(final Child baby) {
         id = baby.id;
         lastName = baby.lastName;
         firstName = baby.firstName;

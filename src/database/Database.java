@@ -1,17 +1,18 @@
-package Database;
+package database;
+import children.Child;
 
-import Children.Child;
-
-import java.util.Map;
-
-public class Database {
+/**
+ * Class that contains databases with children and gifts.
+ * Also keeps track of budgets.
+ */
+public final class Database {
     private double santaBudget;
     private double unitBudget;
     private ChildrenDatabase childrenDatabase;
     private GiftDatabase giftDatabase;
 
-    public Database(double santaBudget, ChildrenDatabase childrenDatabase,
-                    GiftDatabase giftDatabase) {
+    public Database(final double santaBudget, final ChildrenDatabase childrenDatabase,
+                    final GiftDatabase giftDatabase) {
         this.santaBudget = santaBudget;
         this.childrenDatabase = childrenDatabase;
         this.giftDatabase = giftDatabase;
@@ -20,7 +21,11 @@ public class Database {
         giveGifts();
     }
 
-    public void update(AnnualChange annualChange) {
+    /**
+     * Calls all methods that update databases.
+     * Calculates new budget.
+     */
+    public void update(final AnnualChange annualChange) {
         santaBudget = annualChange.getNewSantaBudget();
         childrenDatabase.update(annualChange);
         giftDatabase.update(annualChange);
